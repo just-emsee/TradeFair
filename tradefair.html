@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TradeFair</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500&display=swap">
+<style>
+:root{--bg:#f1f3f2;--panel:#fff;--ink:#16222b;--mute:#5d6b75;--line:#d5dbdf;--acc:#0f6f66;--gain:#8a5a00;--gainbg:#fbefd0;--inp:#fff;--bad:#b3261e;--badbg:#fde7e5;--ok:#0f6f66;--gbg:#dcf2e6;--gfg:#13683a;--bbg:#e0ecfa;--bfg:#1d5aa3;--rbg:#fbe3e1;--rfg:#a8322a;--vbg:#ece3f8;--vfg:#6a3fa0;--tbg:#d9f0f2;--tfg:#0e6b73;--ibg:#e3e6fa;--ifg:#3b48a8;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101b24;--panel:#182733;--ink:#e6edf2;--mute:#8fa1ad;--line:#2a3d4b;--acc:#4fc3b6;--gain:#f0c250;--gainbg:#3a3017;--inp:#0f1a22;--bad:#ff8a80;--badbg:#4a1d1a;--gbg:#14382a;--gfg:#6fdca0;--bbg:#162c46;--bfg:#7db4f2;--rbg:#3f1f1f;--rfg:#f19a93;--vbg:#2c2142;--vfg:#bf9cf0;--tbg:#12353a;--tfg:#68d3dc;--ibg:#20244a;--ifg:#9aa6f5;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#101b24;--panel:#182733;--ink:#e6edf2;--mute:#8fa1ad;--line:#2a3d4b;--acc:#4fc3b6;--gain:#f0c250;--gainbg:#3a3017;--inp:#0f1a22;--bad:#ff8a80;--badbg:#4a1d1a;--gbg:#14382a;--gfg:#6fdca0;--bbg:#162c46;--bfg:#7db4f2;--rbg:#3f1f1f;--rfg:#f19a93;--vbg:#2c2142;--vfg:#bf9cf0;--tbg:#12353a;--tfg:#68d3dc;--ibg:#20244a;--ifg:#9aa6f5;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 Barlow,"Segoe UI",system-ui,sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:20px 16px 56px}
+h1,h2{font-family:"Barlow Semi Condensed","Segoe UI",sans-serif;margin:0}
+h1{font-size:30px;font-weight:700}
+h2{font-size:20px;font-weight:600;margin:28px 0 10px}
+.brand{font:700 15px "Barlow Semi Condensed","Segoe UI",sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin-bottom:2px}
+.sub{color:var(--mute);margin:2px 0 16px}
+button:focus-visible,textarea:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+label{display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--mute)}
+input,select,textarea{background:var(--inp);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:7px 9px;font:inherit;min-width:0}
+textarea{width:100%;resize:vertical;line-height:1.4}
+.hrow{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.link{background:none;border:0;color:var(--acc);font:600 14px Barlow,sans-serif;cursor:pointer;text-decoration:underline;padding:4px 0}
+.btn{background:var(--acc);color:var(--bg);border:0;border-radius:6px;padding:8px 14px;font:600 14px Barlow,sans-serif;cursor:pointer}
+.btn.alt{background:none;color:var(--ink);border:1px solid var(--line)}
+.bar{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-bottom:8px}
+.scroll{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;min-width:680px}
+th{font:600 13px "Barlow Semi Condensed",sans-serif;color:var(--mute);text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+td input{width:100%;padding:5px 7px}
+td input.n{text-align:right;width:132px}
+td input.p{text-align:right;width:76px}
+.pair{display:flex;gap:6px;align-items:center}
+.pair select{width:130px}
+.x{background:none;border:0;color:var(--mute);cursor:pointer;font-size:18px}
+.statswrap{overflow-x:auto}
+.stats{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;min-width:560px}
+.stats .w3{grid-column:span 3}
+.stats .w2{grid-column:span 2}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 14px}
+.stat b{display:block;font:600 22px "Barlow Semi Condensed",sans-serif;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--mute)}
+.stat.key{background:var(--gainbg);border-color:transparent}
+.stat.key b{color:var(--gain)}
+.stat.good{background:var(--gbg);border-color:transparent}
+.stat.good b{color:var(--gfg)}
+.err{background:var(--badbg);color:var(--bad);border:1px solid var(--bad);border-radius:8px;padding:10px 14px;margin:12px 0;font-weight:500}
+.pay{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:8px;padding:10px 14px;margin-bottom:8px;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline}
+.pay strong{font-size:17px}
+.choice{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:8px;padding:12px 14px;margin:0 0 10px}
+.det{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:10px 14px;margin-top:22px}
+.det summary{cursor:pointer;font:600 17px "Barlow Semi Condensed","Segoe UI",sans-serif}
+.inl{display:flex;gap:6px}
+.chk{flex-direction:row;align-items:center;flex-wrap:wrap;gap:4px 8px;color:var(--ink);font-size:15px;margin-top:12px;cursor:pointer}
+.chk input{width:18px;height:18px;accent-color:var(--acc)}
+.chk small{color:var(--mute);font-size:13px}
+.det+.det{margin-top:12px}
+.det>.scroll{margin-top:12px}
+input:disabled,select:disabled{opacity:.5}
+#dstats .stats{min-width:0;margin-top:4px}
+#dstats .stat{background:var(--bg)}
+#dstats .stat.key{background:var(--gainbg)}
+#dstats .stat.good{background:var(--gbg)}
+.amt{background:var(--gainbg);color:var(--gain);padding:0 6px;border-radius:4px}
+.pay small{color:var(--mute)}
+.note{color:var(--mute);font-size:13px;margin:8px 0}
+.plus{color:var(--ok);font-weight:600}.minus{color:var(--bad);font-weight:600}
+.empty{padding:20px;color:var(--mute)}
+@media(max-width:700px){
+.wrap{padding:16px 12px 40px}
+h1{font-size:26px}
+.scroll{border:0;background:none;overflow:visible}
+table,tbody,tr,td{display:block;width:100%;min-width:0!important}
+thead{display:none}
+tr{background:var(--panel);border:1px solid var(--line);border-radius:8px;margin-bottom:10px;padding:6px 12px}
+td{border:0!important;padding:5px 0;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 10px;text-align:right}
+td::before{content:attr(data-label);color:var(--mute);font-size:13px;text-align:left;flex:none}
+td input{width:auto}
+td input:not(.n):not(.p){flex:1;min-width:0;text-align:right}
+td input.n{width:150px}
+td .note{flex-basis:100%;text-align:right}
+.pair select{width:122px}
+.bar label{flex:1 1 140px}
+.inl input{flex:1}
+.bar input,.bar select{width:100%!important}
+.det tr{background:var(--bg)}
+.stats{min-width:0;gap:8px}
+.stat{padding:8px 10px}
+.stat b{font-size:17px}
+.stat span{font-size:12px;line-height:1.2;display:block}
+.pay{padding:10px 12px}
+}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:10px 16px;font:600 17px "Barlow Semi Condensed","Segoe UI",sans-serif;color:var(--mute);cursor:pointer}
+.tabs button[aria-selected=true]{color:var(--ink);border-color:var(--acc)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.rec{text-align:left;background:var(--gainbg);border:0;border-radius:8px;padding:10px 14px;color:var(--ink);cursor:pointer;font:inherit}
+.rec span{font-size:13px;color:var(--mute);display:block}
+.rec b{font:600 22px "Barlow Semi Condensed",sans-serif;color:var(--gain);display:block;font-variant-numeric:tabular-nums}
+.rec small{color:var(--mute)}
+.badge{display:inline-block;background:var(--gainbg);color:var(--gain);font:600 12px Barlow,sans-serif;padding:1px 8px;border-radius:99px;margin:3px 4px 0 0}
+#htable{min-width:860px}
+.stat.na b{opacity:.5}
+.pay{cursor:pointer;align-items:flex-start;flex-wrap:nowrap;gap:12px}
+.pay input{width:20px;height:20px;margin-top:3px;accent-color:var(--acc);flex:none}
+.pay .paytxt{flex:1}
+.pay small{display:block}
+.pay.paid{opacity:.6;border-left-color:var(--ok)}
+.pay.paid strong{text-decoration:line-through}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;display:flex;gap:14px;align-items:center;max-width:calc(100% - 24px);z-index:20;box-shadow:0 4px 18px rgba(0,0,0,.3)}
+.toast[hidden]{display:none}
+.toast .link{color:var(--bg);font-size:15px;flex:none}
+.blue{--cbg:var(--bbg);--cfg:var(--bfg)}
+.rose{--cbg:var(--rbg);--cfg:var(--rfg)}
+.violet{--cbg:var(--vbg);--cfg:var(--vfg)}
+.teal{--cbg:var(--tbg);--cfg:var(--tfg)}
+.indigo{--cbg:var(--ibg);--cfg:var(--ifg)}
+.good{--cbg:var(--gbg);--cfg:var(--gfg)}
+.stat:is(.blue,.rose,.violet,.teal,.indigo,.good){background:var(--cbg);border-color:transparent}
+.stat:is(.blue,.rose,.violet,.teal,.indigo,.good) b{color:var(--cfg)}
+.rec:is(.blue,.rose,.violet,.teal,.indigo,.good){background:var(--cbg)}
+.rec:is(.blue,.rose,.violet,.teal,.indigo,.good) b{color:var(--cfg)}
+.badge:is(.blue,.rose,.violet,.teal,.indigo,.good){background:var(--cbg);color:var(--cfg)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>TradeFair</h1>
+<p class="sub">Payout splitter. Add everyone’s investment and sales, and see who pays whom so the profit is split by stake, transfer fees included.</p>
+<nav class="tabs" role="tablist"><button role="tab" id="tabjob" aria-selected="true" type="button">Job</button><button role="tab" id="tabhist" aria-selected="false" type="button">History</button></nav>
+<div id="jobview">
+
+<div class="bar">
+<label>Job<select id="job"></select></label>
+<label>Job name<input id="name" style="width:200px"></label>
+<button class="btn alt" id="newjob">New job</button>
+<button class="btn alt" id="dupjob">Duplicate job</button>
+<button class="btn alt" id="share">Share job</button>
+<button class="btn alt" id="deljob">Delete job</button>
+</div>
+
+<details class="det" id="det" open><summary>Job details</summary>
+<div class="bar" style="margin-top:12px">
+<label>Date<input id="date" type="date"></label>
+<label>Start<span class="inl"><input id="start" type="datetime-local"><button class="btn alt" id="nowS" type="button">Now</button></span></label>
+<label>End<span class="inl"><input id="end" type="datetime-local"><button class="btn alt" id="nowE" type="button">Now</button></span></label>
+<label>Total SCU<input id="scu" type="number" min="0" step="any" style="width:120px"></label>
+</div>
+<label style="margin:0 0 10px">Notes<textarea id="notes" rows="3" placeholder="Route, commodity, who flew what…"></textarea></label>
+<div id="dstats"></div>
+</details>
+
+<details class="det" id="pdet" open><summary>People</summary>
+<label class="chk"><input type="checkbox" id="eq"> Equal stakes <small>Everyone gets the same share and overrides are turned off.</small></label>
+<div class="scroll"><table><thead><tr><th>Name</th><th class="num">Invested</th><th class="num">Sold for</th><th>Stake override</th><th class="num">Stake</th><th></th></tr></thead><tbody id="pbody"></tbody></table></div>
+<div class="bar" style="margin-top:10px"><button class="btn" id="add">Add person</button></div>
+</details>
+
+<div id="err"></div>
+
+<h2 class="hrow">Totals <button class="link" id="more" type="button" aria-expanded="true">Show less</button></h2>
+<div class="statswrap"><div class="stats" id="stats"></div></div>
+
+<h2 class="hrow">Who pays who <button class="link" id="copy" type="button">Copy summary</button></h2>
+<div id="pays"></div>
+
+<h2>Per person</h2>
+<div class="scroll"><table style="min-width:700px"><thead><tr><th>Name</th><th class="num">Stake</th><th class="num">Invested</th><th class="num">Sold for</th><th class="num">Investment back</th><th class="num">Profit share</th><th class="num">Ends with</th><th class="num">Settlement</th></tr></thead><tbody id="rbody"></tbody></table></div>
+<p class="note">Settlement shows the amounts to type in when sending. The game adds the fee on top of that.</p>
+</div>
+
+<div id="histview" hidden>
+<h2>Overview</h2>
+<div class="statswrap"><div class="stats" id="hover"></div></div>
+<p class="note" id="hnote"></p>
+<h2>Records</h2>
+<div class="grid" id="hrec"></div>
+<h2 class="hrow">All jobs <select id="hsort" aria-label="Sort jobs"><option value="new">Newest first</option><option value="profit">Highest profit</option><option value="roi">Highest ROI</option><option value="pph">Highest profit/hour</option></select></h2>
+<div class="scroll"><table id="htable"><thead><tr><th>Job</th><th>Date</th><th class="num">Crew</th><th class="num">Invested</th><th class="num">Profit</th><th class="num">ROI</th><th class="num">Profit/hour</th><th class="num">Profit/SCU</th><th>Payments</th><th></th></tr></thead><tbody id="hbody"></tbody></table></div>
+</div>
+
+<h2>Backup</h2>
+<div class="bar">
+<button class="btn alt" id="exp">Export jobs</button>
+<button class="btn alt" id="imp">Import jobs</button>
+<input type="file" id="file" style="position:fixed;left:0;top:0;width:1px;height:1px;opacity:0;pointer-events:none" tabindex="-1" aria-hidden="true">
+</div>
+<p class="note" id="msg" role="status" style="margin:0 0 6px"></p>
+<div class="choice" id="choice" hidden role="alertdialog" aria-labelledby="ctext">
+<div id="ctext"></div>
+<div class="bar" style="margin:10px 0 0"><button class="btn" id="cadd">Add to existing jobs</button><button class="btn alt" id="crep">Replace all current jobs</button><button class="btn alt" id="ccan">Cancel</button></div>
+</div>
+<p class="note" style="margin:0">Your jobs are stored in this browser on this computer only. Clearing site data or switching browsers can delete them, so export a backup now and then.</p>
+</div>
+
+<div class="toast" id="toast" hidden role="status"><span id="ttext"></span><button class="link" id="tundo" type="button" hidden>Undo</button></div>
+
+<script>
+const K="payout-splitter-v1";
+const FEE=0.005;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+const fmt=n=>Math.round(n).toLocaleString("en-US");
+const pct=n=>(Math.round(n*100)/100).toLocaleString("en-US")+"%";
+const money=v=>v===""||v==null?"":Number(v).toLocaleString("en-US");
+const normMoney=v=>v===""||v==null?"":String(Math.max(0,Math.round(parseFloat(v)||0)));
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const payKey=x=>x.from+">"+x.to+":"+x.net;
+const person=n=>({n:n||"",inv:"",sold:"",ov:"",om:"fixed"});
+const newJob=(i)=>({id:Date.now()+Math.random(),name:"Job "+i,date:today(),notes:"",paid:{},start:"",end:"",scu:"",people:[person("Player 1"),person("Player 2")]});
+let S={cur:0,jobs:[newJob(1)]};
+try{const j=JSON.parse(localStorage.getItem(K));if(j&&j.jobs&&j.jobs.length)S=j}catch(e){}
+S.jobs.forEach(j=>(j.people||[]).forEach(p=>{p.inv=normMoney(p.inv);p.sold=normMoney(p.sold)}));
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const J=()=>S.jobs[S.cur];
+const num=v=>parseFloat(v)||0;
+
+function calc(job){
+ const f=FEE;
+ const P=job.people.map((p,i)=>{
+  const hasVal=p.ov!==""&&p.ov!=null;
+  let m=["fixed","low","high"].includes(p.om)?p.om:"fixed"; if(!hasVal||job.equal)m="auto";
+  return {i,n:p.n||"Unnamed",inv:num(p.inv),sold:num(p.sold),m,val:num(p.ov)};
+ });
+ const TI=P.reduce((a,p)=>a+p.inv,0), TS=P.reduce((a,p)=>a+p.sold,0), profit=TS-TI;
+ const pos=P.map(p=>p.inv).filter(x=>x>0), lo=pos.length?Math.min(...pos):0, hi=pos.length?Math.max(...pos):0;
+ P.forEach(p=>{p.w=p.m==="low"?p.val/100*lo:p.m==="high"?p.val/100*hi:p.inv});
+ const fixed=P.filter(p=>p.m==="fixed"), free=P.filter(p=>p.m!=="fixed");
+ const O=fixed.reduce((a,p)=>a+p.val,0), remain=100-O, base=free.reduce((a,p)=>a+p.w,0);
+ P.forEach(p=>{
+  if(job.equal)p.s=100/P.length;
+  else if(p.m==="fixed")p.s=p.val;
+  else if(remain<0)p.s=0;
+  else p.s=base>0?remain*p.w/base:remain/free.length;
+ });
+ const total=P.reduce((a,p)=>a+p.s,0);
+ const bad=P.length>0&&Math.abs(total-100)>0.005;
+ const fee=m=>Math.max(1,m*f);
+ const netFor=g=>{const n1=g-1;return n1*f<1?n1:g/(1+f)};
+ const settle=F=>{
+  P.forEach(p=>{p.share=p.s/100*(profit-F);p.T=p.inv+p.share;p.d=p.sold-p.T});
+  const r=P.filter(p=>p.d<-0.5).map(p=>({p,left:-p.d})).sort((a,b)=>b.left-a.left);
+  const d=P.filter(p=>p.d>0.5).map(p=>({p,left:p.d})).sort((a,b)=>b.left-a.left);
+  const out=[];
+  for(const x of d){for(const y of r){
+   if(netFor(x.left)<0.5)break; if(y.left<0.5)continue;
+   const m=Math.min(y.left,netFor(x.left)); x.left-=m+fee(m); y.left-=m;
+   out.push({fi:x.p.i,ti:y.p.i,from:x.p.n,to:y.p.n,m});
+  }}
+  return out;
+ };
+ let F=0,pays=[];
+ if(bad)settle(0);
+ else{
+  for(let k=0;k<60;k++){const nf=settle(F).reduce((a,x)=>a+fee(x.m),0);const done=Math.abs(nf-F)<1e-6;F=nf;if(done)break}
+  pays=settle(F).map(x=>{const net=Math.round(x.m);return {fi:x.fi,ti:x.ti,from:x.from,to:x.to,net,fee:Math.max(1,Math.floor(net*f+1e-9))}});
+  F=pays.reduce((a,x)=>a+x.fee,0);
+  P.forEach(p=>{p.share=p.s/100*(profit-F);p.T=p.inv+p.share});
+ }
+ return {P,TI,TS,profit,F,total,bad,pays,remain,O,free:free.length,
+  roi:TI>0?profit/TI*100:0, roiNet:TI>0?(profit-F)/TI*100:0};
+}
+
+function fmtMoneyInput(t){
+ const pos=t.selectionStart==null?t.value.length:t.selectionStart;
+ const before=t.value.slice(0,pos).replace(/\D/g,"").length;
+ const d=t.value.replace(/\D/g,"").replace(/^0+(?=\d)/,"");
+ const f=d?Number(d).toLocaleString("en-US"):"";
+ t.value=f;
+ let i=0,n=0;
+ if(before>0){for(i=0;i<f.length;i++){if(/\d/.test(f[i]))n++;if(n===before){i++;break}}}
+ try{t.setSelectionRange(i,i)}catch(e){}
+ return d;
+}
+function renderPeople(){
+ $("pbody").innerHTML=J().people.map((p,i)=>{
+  const eq=!!J().equal, hasVal=p.ov!==""&&p.ov!=null&&!eq;
+  const m=["fixed","low","high"].includes(p.om)?p.om:"fixed";
+  const opt=(v,l)=>`<option value="${v}"${m===v?" selected":""}>${l}</option>`;
+  return `<tr><td data-label="Name"><input value="${esc(p.n)}" data-i="${i}" data-k="n" aria-label="Name" placeholder="Name"></td>
+  <td class="num" data-label="Invested"><input class="n" type="text" inputmode="numeric" autocomplete="off" value="${money(p.inv)}" data-i="${i}" data-k="inv" aria-label="Invested"></td>
+  <td class="num" data-label="Sold for"><input class="n" type="text" inputmode="numeric" autocomplete="off" value="${money(p.sold)}" data-i="${i}" data-k="sold" aria-label="Sold for"></td>
+  <td data-label="Override"><div class="pair"><input class="p" type="number" min="0" step="any" placeholder="${eq?"equal":"auto"}" value="${eq?"":esc(p.ov)}" data-i="${i}" data-k="ov" aria-label="Stake override value"${eq?" disabled":""}><select data-i="${i}" data-k="om" aria-label="Stake override type"${hasVal?"":" hidden"}>${opt("fixed","Fixed %")}${opt("low","% of lowest")}${opt("high","% of highest")}</select></div><div class="note" style="margin:2px 0 0" id="vi${i}"></div></td>
+  <td class="num" data-label="Stake" id="st${i}"></td>
+  <td data-label="Remove"><button class="x" data-d="${i}" aria-label="Remove person">×</button></td></tr>`}).join("");
+}
+
+function renderOut(){
+ const job=J(), R=calc(job);
+ R.P.forEach((p,i)=>{
+  const st=$("st"+i); if(st)st.textContent=pct(p.s);
+  const vi=$("vi"+i); if(vi)vi.textContent=(p.m==="low"||p.m==="high")?"counts as "+fmt(p.w)+" invested":"";
+ });
+ let e="";
+ if(R.bad){
+  e=R.O>100.005&&R.free
+   ?`Fixed stakes add up to ${pct(R.O)}, which is more than 100%. Lower one so the others can share the rest.`
+   :`Stakes add up to ${pct(R.total)}, but they must add up to 100%. Adjust the fixed stakes${R.free?"":" or set someone to another mode"}.`;
+ }
+ $("err").innerHTML=e?`<div class="err" role="alert">${e}</div>`:"";
+ const st=(l,v,w,k)=>`<div class="stat w${w}${k?" "+k:""}"><span>${l}</span><b>${v}</b></div>`;
+ const j=J(), ta=Date.parse(j.start), tb=Date.parse(j.end), scu=num(j.scu), hrs=(ta&&tb&&tb>ta)?(tb-ta)/36e5:0, net=R.profit-R.F, ok=!R.bad;
+ let h=st("Total investment",fmt(R.TI),3,"blue")+st("Total transfer fees",ok?fmt(R.F):"–",3,"rose")+
+  st("Total sales",fmt(R.TS),2,"blue")+st("Profit without fees",fmt(R.profit),2,"key")+st("Profit with fees",ok?fmt(net):"–",2,"good");
+ if(!S.less){
+  h+=st("ROI without fees",R.roi.toFixed(1)+"%",3,"violet")+st("ROI with fees",ok?R.roiNet.toFixed(1)+"%":"–",3,"violet");
+  if(hrs>0){const m=Math.round(hrs*60);h+=st("Duration",Math.floor(m/60)+"h "+m%60+"m",2,"indigo")+st("Profit/hour without fees",fmt(R.profit/hrs),2,"key")+st("Profit/hour with fees",ok?fmt(net/hrs):"–",2,"good")}
+  if(scu>0)h+=st("Total SCU",scu.toLocaleString("en-US",{maximumFractionDigits:2}),2,"teal")+st("Profit/SCU without fees",fmt(R.profit/scu),2,"key")+st("Profit/SCU with fees",ok?fmt(net/scu):"–",2,"good")+
+   st("Average buy price/SCU",fmt(R.TI/scu),3,"teal")+st("Average sell price/SCU",fmt(R.TS/scu),3,"teal");
+ }
+ LAST={R,hrs,scu};
+ $("stats").innerHTML=h;
+ $("more").textContent=S.less?"Show more":"Show less";$("more").setAttribute("aria-expanded",String(!S.less));
+ renderDetails(R);
+ if(R.bad){$("pays").innerHTML=`<div class="empty">Fix the stakes to see who pays who.</div>`;$("rbody").innerHTML="";return}
+ const snd=R.P.map(()=>({net:0,fee:0,rec:0}));
+ R.pays.forEach(x=>{snd[x.fi].net+=x.net;snd[x.fi].fee+=x.fee;snd[x.ti].rec+=x.net});
+ $("pays").innerHTML=R.pays.length
+  ?R.pays.map(x=>{const k=payKey(x),ck=!!(job.paid&&job.paid[k]);return `<label class="pay${ck?" paid":""}"><input type="checkbox" data-pk="${esc(k)}"${ck?" checked":""} aria-label="Mark as paid"><div class="paytxt"><strong>${esc(x.from)} sends <span class="amt">${fmt(x.net)}</span> to ${esc(x.to)}</strong><small>Type in ${fmt(x.net)}. The game adds a fee of ${fmt(x.fee)}, so ${esc(x.from)} pays ${fmt(x.net+x.fee)} in total.</small></div></label>`}).join("")+(R.pays.every(x=>job.paid&&job.paid[payKey(x)])?`<p class="note">All payments are marked as paid.</p>`:"")
+  :`<div class="empty">Nobody needs to pay anyone yet. Fill in what each person invested and sold for.</div>`;
+ $("rbody").innerHTML=R.P.map((p,i)=>{
+  const q=snd[i];
+  const t=q.net>0?`<span class="minus">sends ${fmt(q.net)}</span> <small>(+${fmt(q.fee)} fee)</small>`:q.rec>0?`<span class="plus">receives ${fmt(q.rec)}</span>`:"even";
+  return `<tr><td data-label="Name"><b>${esc(p.n)}</b></td><td class="num" data-label="Stake">${pct(p.s)}</td><td class="num" data-label="Invested">${fmt(p.inv)}</td><td class="num" data-label="Sold for">${fmt(p.sold)}</td><td class="num" data-label="Investment back">${fmt(p.inv)}</td><td class="num" data-label="Profit share">${fmt(p.share)}</td><td class="num" data-label="Ends with"><b>${fmt(p.T)}</b></td><td class="num" data-label="Settlement">${t}</td></tr>`}).join("");
+}
+
+const pad=n=>String(n).padStart(2,"0");
+const nowStr=()=>{const d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())+"T"+pad(d.getHours())+":"+pad(d.getMinutes())};
+let LAST=null;
+function summaryText(){
+ const {R,hrs,scu}=LAST, j=J(), n=fmt;
+ if(R.bad)return null;
+ const net=R.profit-R.F, L=[];
+ L.push("TradeFair - "+(j.name||"Job")+(j.date?" ("+j.date+")":""));
+ L.push("Invested "+n(R.TI)+" | Sold "+n(R.TS));
+ L.push("Profit "+n(R.profit)+" | after fees "+n(net)+" (fees "+n(R.F)+")");
+ L.push("ROI "+R.roi.toFixed(1)+"% | after fees "+R.roiNet.toFixed(1)+"%");
+ if(hrs>0){const m=Math.round(hrs*60);L.push("Duration "+Math.floor(m/60)+"h "+m%60+"m | Profit/hour "+n(R.profit/hrs)+" | after fees "+n(net/hrs))}
+ if(scu>0)L.push("SCU "+scu.toLocaleString("en-US",{maximumFractionDigits:2})+" | Profit/SCU "+n(R.profit/scu)+" | after fees "+n(net/scu)+" | Avg buy "+n(R.TI/scu)+" | Avg sell "+n(R.TS/scu));
+ L.push("","Stakes: "+R.P.map(x=>x.n+" "+pct(x.s)).join(", "),"");
+ if(R.pays.length){L.push("Payments:");R.pays.forEach(x=>L.push("- "+x.from+" sends "+n(x.net)+" to "+x.to+" (fee "+n(x.fee)+")"+((j.paid&&j.paid[payKey(x)])?" - paid":"")))}
+ else L.push("No payments needed.");
+ if(j.notes)L.push("","Notes: "+j.notes);
+ return L.join("\n");
+}
+function renderDetails(){
+ const j=J(), a=Date.parse(j.start), b=Date.parse(j.end);
+ let h="";
+ if(a&&b&&b<=a)h=`<p class="note" style="margin:0">The end time is before the start time.</p>`;
+  $("dstats").innerHTML=h;
+}
+function renderJobs(){
+ $("job").innerHTML=S.jobs.map((j,i)=>`<option value="${i}"${i===S.cur?" selected":""}>${esc(j.name||"Untitled")}</option>`).join("");
+ $("name").value=J().name;
+ const j=J();$("start").value=j.start||"";$("end").value=j.end||"";$("scu").value=j.scu||"";$("date").value=j.date||"";$("eq").checked=!!j.equal;$("notes").value=j.notes||"";
+}
+function renderAll(){renderJobs();renderPeople();renderOut()}
+
+$("job").onchange=e=>{S.cur=+e.target.value;save();renderAll()};
+$("name").oninput=e=>{J().name=e.target.value;save();const o=$("job").options[S.cur];if(o)o.textContent=e.target.value||"Untitled"};
+$("newjob").onclick=()=>{S.jobs.push(newJob(S.jobs.length+1));S.cur=S.jobs.length-1;save();renderAll();$("name").select()};
+$("dupjob").onclick=()=>{const c=JSON.parse(JSON.stringify(J()));c.id=Date.now()+Math.random();c.paid={};c.name=(c.name||"Job")+" (copy)";S.jobs.push(c);S.cur=S.jobs.length-1;save();renderAll()};
+$("deljob").onclick=()=>{
+ const idx=S.cur, job=S.jobs[idx]; let ph=null;
+ S.jobs.splice(idx,1);
+ if(!S.jobs.length){ph=newJob(1);S.jobs.push(ph)}
+ S.cur=Math.min(idx,S.jobs.length-1);save();renderAll();
+ showToast("Deleted “"+(job.name||"Untitled")+"”.",()=>{if(ph)S.jobs=S.jobs.filter(x=>x!==ph);S.jobs.splice(Math.min(idx,S.jobs.length),0,job);S.cur=S.jobs.indexOf(job);save();renderAll()});
+};
+$("add").onclick=()=>{J().people.push(person("Player "+(J().people.length+1)));save();renderPeople();renderOut();const r=$("pbody").querySelector("tr:last-child input");r&&r.focus()};
+$("pbody").oninput=e=>{const t=e.target,i=t.dataset.i,k=t.dataset.k;if(i===undefined||k==="om")return;const pe=J().people[+i];pe[k]=(k==="inv"||k==="sold")?fmtMoneyInput(t):t.value;if(k==="ov"){const sel=t.parentNode.querySelector("select");if(sel){sel.hidden=t.value==="";if(t.value!==""&&!["fixed","low","high"].includes(pe.om)){pe.om="fixed";sel.value="fixed"}}}save();renderOut()};
+$("pbody").onchange=e=>{const t=e.target;if(t.dataset.k!=="om")return;J().people[+t.dataset.i].om=t.value;save();renderPeople();renderOut()};
+$("pbody").onclick=e=>{
+ const d=e.target.dataset.d;if(d===undefined)return;
+ const jb=J(), pe=jb.people.splice(+d,1)[0];save();renderPeople();renderOut();
+ showToast("Removed "+(pe.n||"person")+".",()=>{if(S.jobs.indexOf(jb)<0)return;jb.people.splice(Math.min(+d,jb.people.length),0,pe);save();if(J()===jb){renderPeople();renderOut()}});
+};
+$("start").oninput=e=>{J().start=e.target.value;save();renderOut()};
+$("end").oninput=e=>{J().end=e.target.value;save();renderOut()};
+$("scu").oninput=e=>{J().scu=e.target.value;save();renderOut()};
+$("eq").onchange=e=>{J().equal=e.target.checked;save();renderPeople();renderOut()};
+$("date").oninput=e=>{J().date=e.target.value;save()};
+$("notes").oninput=e=>{J().notes=e.target.value;save()};
+$("more").onclick=()=>{S.less=!S.less;save();renderOut()};
+$("nowS").onclick=()=>{J().start=nowStr();$("start").value=J().start;save();renderOut()};
+$("nowE").onclick=()=>{J().end=nowStr();$("end").value=J().end;save();renderOut()};
+$("copy").onclick=async()=>{
+ const t=summaryText(), b=$("copy"), old="Copy summary";
+ const flash=m=>{b.textContent=m;setTimeout(()=>b.textContent=old,1800)};
+ if(!t)return flash("Fix the stakes first");
+ flash((await copyText(t))?"Copied!":"Copy failed");
+};
+$("exp").onclick=()=>{
+ const blob=new Blob([JSON.stringify({app:"payout-splitter",v:1,jobs:S.jobs},null,1)],{type:"application/json"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+ a.download="payout-splitter-"+new Date().toISOString().slice(0,10)+".json";
+ document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+ $("msg").textContent="Exported "+S.jobs.length+" job"+(S.jobs.length===1?"":"s")+".";
+};
+let pending=null;
+const done=t=>{pending=null;$("choice").hidden=true;save();renderAll();$("msg").textContent=t};
+$("cadd").onclick=()=>{if(!pending)return;const n=pending.length,first=S.jobs.length;S.jobs.push(...pending);S.cur=first;done("Added "+n+" job"+(n===1?"":"s")+" to your existing jobs.")};
+$("crep").onclick=()=>{if(!pending)return;const n=pending.length,pj=S.jobs,pc=S.cur;S.jobs=pending;S.cur=0;done("Replaced your jobs with "+n+" imported job"+(n===1?"":"s")+".");showToast("Your jobs were replaced.",()=>{S.jobs=pj;S.cur=pc;save();renderAll();$("msg").textContent=""})};
+$("ccan").onclick=()=>{pending=null;$("choice").hidden=true;$("msg").textContent="Import cancelled."};
+$("imp").onclick=()=>$("file").click();
+$("file").onchange=e=>{
+ const f=e.target.files[0];if(!f)return;
+ const r=new FileReader();
+ r.onload=()=>{
+  try{
+   const d=JSON.parse(r.result);
+   if(!d||!Array.isArray(d.jobs)||!d.jobs.length)throw 0;
+   const jobs=d.jobs.map((j,i)=>cleanJob(j,i,false));
+   pending=jobs;
+   $("msg").textContent="";
+   $("ctext").textContent="Found "+jobs.length+" job"+(jobs.length===1?"":"s")+" in this file. Add "+(jobs.length===1?"it":"them")+" to your current jobs, or replace all your current jobs?";
+   $("choice").hidden=false;
+  }catch(err){pending=null;$("choice").hidden=true;$("msg").textContent="That file isn’t a valid export. Choose a file saved with “Export jobs”."}
+  e.target.value="";
+ };
+ r.readAsText(f);
+};
+$("pays").onchange=e=>{
+ const k=e.target.dataset.pk;if(k===undefined)return;
+ const jb=J();jb.paid=jb.paid||{};
+ if(e.target.checked)jb.paid[k]=true;else delete jb.paid[k];
+ save();renderOut();
+ const again=$("pays").querySelector('[data-pk="'+CSS.escape(k)+'"]');if(again)again.focus();
+};
+
+let tt=null;
+function showToast(text,undo,ms){
+ clearTimeout(tt);$("ttext").textContent=text;
+ const u=$("tundo");u.hidden=!undo;
+ u.onclick=undo?()=>{undo();$("toast").hidden=true;clearTimeout(tt)}:null;
+ $("toast").hidden=false;tt=setTimeout(()=>{$("toast").hidden=true},ms||8000);
+}
+async function copyText(t){
+ try{await navigator.clipboard.writeText(t);return true}catch(e){}
+ try{const ta=document.createElement("textarea");ta.value=t;ta.setAttribute("readonly","");ta.style.cssText="position:fixed;left:0;top:0;opacity:0";document.body.appendChild(ta);ta.select();const ok=document.execCommand("copy");ta.remove();return ok}catch(e){return false}
+}
+
+function cleanJob(j,i,keepId){
+ if(!j||!Array.isArray(j.people))throw 0;
+ const str=v=>v==null?"":String(v), paid={};
+ if(j.paid&&typeof j.paid==="object")for(const k in j.paid)if(j.paid[k]===true)paid[k]=true;
+ return {id:keepId&&(typeof j.id==="number"||typeof j.id==="string")?j.id:Date.now()+Math.random(),
+  name:String(j.name||"Imported job "+(i+1)),equal:!!j.equal,date:str(j.date),notes:str(j.notes),start:str(j.start),end:str(j.end),scu:str(j.scu),paid,
+  people:j.people.map(p=>({n:String(p.n||""),inv:normMoney(p.inv),sold:normMoney(p.sold),ov:str(p.ov),om:["fixed","low","high"].includes(p.om)?p.om:"fixed"}))};
+}
+
+/* ---- share links ---- */
+const b64=u=>{let s="";for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")};
+const unb64=s=>{s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";return Uint8Array.from(atob(s),c=>c.charCodeAt(0))};
+async function pack(obj){
+ const raw=new TextEncoder().encode(JSON.stringify(obj));
+ if(window.CompressionStream){
+  const out=await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream("deflate-raw"))).arrayBuffer();
+  return "1"+b64(new Uint8Array(out));
+ }
+ return "0"+b64(raw);
+}
+async function unpack(str){
+ const bytes=unb64(str.slice(1));
+ let raw=bytes;
+ if(str[0]==="1"){
+  if(!window.DecompressionStream)throw 0;
+  raw=new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).arrayBuffer());
+ }
+ return JSON.parse(new TextDecoder().decode(raw));
+}
+$("share").onclick=async()=>{
+ try{
+  const url=location.href.split("#")[0]+"#job="+await pack(J());
+  const ok=await copyText(url);
+  if(!ok)prompt("Copy this link",url);
+  showToast(location.protocol==="file:"?"Link copied, but it only works for others once TradeFair is hosted online. Until then, use Export jobs.":"Link copied. Anyone who opens it gets this job added to their list.",null,7000);
+ }catch(e){showToast("Couldn’t create the link.",null,5000)}
+};
+async function checkShared(){
+ const m=location.hash.match(/^#job=([\w-]+)$/);if(!m)return;
+ try{
+  const j=cleanJob(await unpack(m[1]),0,true);
+  const ex=S.jobs.find(x=>x.id===j.id);
+  if(ex&&JSON.stringify(cleanJob(ex,0,true))===JSON.stringify(j)){S.cur=S.jobs.indexOf(ex);showToast("That job is already in your list.",null,5000)}
+  else{if(ex){j.id=Date.now()+Math.random();j.name+=" (updated)"}S.jobs.push(j);S.cur=S.jobs.length-1;showToast("Added “"+j.name+"” from a shared link.",null,6000)}
+  save();setView("job");renderAll();
+ }catch(e){showToast("That share link couldn’t be read.",null,5000)}
+ try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}
+}
+
+/* ---- history ---- */
+const dur=h=>{const m=Math.round(h*60);return Math.floor(m/60)+"h "+m%60+"m"};
+function jobStats(job,idx){
+ const R=calc(job), ta=Date.parse(job.start), tb=Date.parse(job.end), scu=num(job.scu), hrs=(ta&&tb&&tb>ta)?(tb-ta)/36e5:0;
+ const net=R.profit-R.F, pm=job.paid||{};
+ return {job,idx,R,valid:!R.bad&&R.TI>0,hrs,scu,net,roi:R.TI>0?net/R.TI*100:0,pph:hrs>0?net/hrs:null,pps:scu>0?net/scu:null,
+  crew:job.people.length,pays:R.pays.length,paid:R.pays.filter(x=>pm[payKey(x)]).length};
+}
+function renderHistory(){
+ const all=S.jobs.map(jobStats), ok=all.filter(x=>x.valid), sum=(a,f)=>a.reduce((t,x)=>t+f(x),0);
+ const dash="–", d1=n=>n.toLocaleString("en-US",{maximumFractionDigits:2});
+ const NA="N/A", card=(l,v,w,k)=>`<div class="stat w${w}${k?" "+k:""}${v===NA?" na":""}"><span>${l}</span><b>${v}</b></div>`;
+ const has=ok.length>0, o=(c,f)=>c?f():NA;
+ const TI=sum(ok,x=>x.R.TI),TS=sum(ok,x=>x.R.TS),P=sum(ok,x=>x.R.profit),F=sum(ok,x=>x.R.F),N=P-F;
+ const tj=ok.filter(x=>x.hrs>0), th=sum(tj,x=>x.hrs), sj=ok.filter(x=>x.scu>0), ts=sum(sj,x=>x.scu);
+ $("hover").innerHTML=
+  card("Total jobs",ok.length,3,"indigo")+card("Average crew size",o(has,()=>d1(sum(ok,x=>x.crew)/ok.length)),3,"indigo")+
+  card("Total invested",o(has,()=>fmt(TI)),3,"blue")+card("Total transfer fees",o(has,()=>fmt(F)),3,"rose")+
+  card("Total sales",o(has,()=>fmt(TS)),2,"blue")+card("Total profit",o(has,()=>fmt(P)),2,"key")+card("Total profit with fees",o(has,()=>fmt(N)),2,"good")+
+  card("Overall ROI (with fees)",o(TI>0,()=>(N/TI*100).toFixed(1)+"%"),3,"violet")+card("Average ROI (with fees)",o(has,()=>(sum(ok,x=>x.roi)/ok.length).toFixed(1)+"%"),3,"violet")+
+  card("Average profit/job",o(has,()=>fmt(N/ok.length)),2,"good")+card("Average profit/hour",o(th>0,()=>fmt(sum(tj,x=>x.net)/th)),2,"good")+card("Average profit/SCU",o(ts>0,()=>fmt(sum(sj,x=>x.net)/ts)),2,"good")+
+  card("Total SCU",o(ts>0,()=>d1(ts)),2,"teal")+card("Total time",o(th>0,()=>dur(th)),2,"indigo")+card("Average time",o(th>0,()=>dur(th/tj.length)),2,"indigo");
+ $("hnote").textContent=ok.length+" of "+all.length+" job"+(all.length===1?"":"s")+" counted. Jobs with no numbers or unfinished stakes are left out. N/A means no job has that data yet, so add times or SCU in Job details.";
+ const RECS=[["Highest profit",x=>x.net,v=>fmt(v),"good"],["Highest ROI",x=>x.roi,v=>v.toFixed(1)+"%","violet"],["Highest profit/hour",x=>x.pph,v=>fmt(v),"good"],["Highest profit/SCU",x=>x.pps,v=>fmt(v),"teal"],["Biggest investment",x=>x.R.TI,v=>fmt(v),"blue"],["Most SCU",x=>x.scu,v=>d1(v),"teal"],["Longest job",x=>x.hrs,v=>dur(v),"indigo"]];
+ const badges={}; let rh="";
+ if(ok.length>=2)for(const [l,get,f,c] of RECS){
+  let best=null;
+  for(const x of ok){const v=get(x);if(v==null||!(v>0))continue;if(!best||v>get(best))best=x}
+  if(!best)continue;
+  (badges[best.idx]=badges[best.idx]||[]).push([l,c]);
+  rh+=`<button class="rec" data-open="${best.idx}"><span>${l}</span><b>${f(get(best))}</b><small>${esc(best.job.name||"Untitled")}${best.job.date?" · "+esc(best.job.date):""}</small></button>`;
+ }
+ $("hrec").innerHTML=rh||`<p class="note" style="margin:0;grid-column:1/-1">Records appear once you have two jobs with numbers.</p>`;
+ const key=$("hsort").value, dt=x=>x.job.date||"", big=-1e18;
+ const cmp={new:(a,b)=>(dt(b)>dt(a)?1:dt(b)<dt(a)?-1:0)||b.idx-a.idx,profit:(a,b)=>b.net-a.net,roi:(a,b)=>b.roi-a.roi,pph:(a,b)=>(b.pph??big)-(a.pph??big)}[key];
+ const rows=[...all].sort((a,b)=>(key==="new"?0:(b.valid-a.valid))||cmp(a,b));
+ $("hbody").innerHTML=rows.map(x=>{
+  const v=x.valid, sub=x.R.bad?"Stakes don’t add up":(!v?"No numbers yet":"");
+  const pay=!v||x.pays===0?dash:x.paid===x.pays?"All paid ✓":x.paid+"/"+x.pays+" paid";
+  const bs=(badges[x.idx]||[]).map(b=>`<span class="badge">★ ${b[0]}</span>`).join("");
+  return `<tr><td data-label="Job"><div><b>${esc(x.job.name||"Untitled")}</b>${sub?`<div class="note" style="margin:0">${sub}</div>`:""}<div>${bs}</div></div></td>
+  <td data-label="Date">${esc(x.job.date||dash)}</td>
+  <td class="num" data-label="Crew">${x.crew}</td>
+  <td class="num" data-label="Invested">${v?fmt(x.R.TI):dash}</td>
+  <td class="num" data-label="Profit">${v?`<span class="${x.net>=0?"plus":"minus"}">${fmt(x.net)}</span>`:dash}</td>
+  <td class="num" data-label="ROI">${v?x.roi.toFixed(1)+"%":dash}</td>
+  <td class="num" data-label="Profit/hour">${v&&x.pph!=null?fmt(x.pph):dash}</td>
+  <td class="num" data-label="Profit/SCU">${v&&x.pps!=null?fmt(x.pps):dash}</td>
+  <td data-label="Payments">${pay}</td>
+  <td><button class="btn alt" data-open="${x.idx}" type="button">Open</button></td></tr>`}).join("");
+}
+let view="job";
+function setView(v){
+ view=v;$("jobview").hidden=v!=="job";$("histview").hidden=v!=="hist";
+ $("tabjob").setAttribute("aria-selected",String(v==="job"));$("tabhist").setAttribute("aria-selected",String(v==="hist"));
+ if(v==="hist")renderHistory();
+ window.scrollTo(0,0);
+}
+$("tabjob").onclick=()=>setView("job");
+$("tabhist").onclick=()=>setView("hist");
+$("hsort").onchange=renderHistory;
+$("histview").onclick=e=>{const b=e.target.closest("[data-open]");if(!b)return;S.cur=+b.dataset.open;save();setView("job");renderAll()};
+window.addEventListener("hashchange",checkShared);
+renderAll();
+checkShared();
+</script>
+</body>
+</html>
