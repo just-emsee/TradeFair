@@ -1,7 +1,4 @@
 FROM nginx:alpine
 
-WORKDIR /etc/nginx/conf.d
-COPY web.conf default.conf
-
-WORKDIR /src
-COPY tradefair.html /src
+COPY web.conf /etc/nginx/conf.d/default.conf
+COPY src /src
