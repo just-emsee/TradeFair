@@ -1,4 +1,7 @@
 FROM nginx:alpine
 
-COPY web.conf /etc/nginx/conf.d/default.conf
-COPY src /src 
+WORKDIR /etc/nginx/conf.d
+COPY web.conf default.conf
+
+WORKDIR /src
+COPY src/ .
